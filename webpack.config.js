@@ -1,4 +1,6 @@
 const Encore = require('@symfony/webpack-encore');
+const { VueLoaderPlugin } = require("vue-loader");
+
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -14,15 +16,16 @@ Encore
   // only needed for CDN's or subdirectory deploy
   //.setManifestKeyPrefix('build/')
 
+  .enableVueLoader(() => {}, { runtimeCompilerBuild: false })
 
   /*
-  * ENTRY CONFIG
-  *
-  * Each entry will result in one JavaScript file (e.g. app.js)
-  * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
-  */
- .addEntry("app", "./assets/app.js")
- .enablePostCssLoader()
+   * ENTRY CONFIG
+   *
+   * Each entry will result in one JavaScript file (e.g. app.js)
+   * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
+   */
+  .addEntry("app", "./assets/app.js")
+  .enablePostCssLoader()
 
   // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
   .splitEntryChunks()
@@ -55,6 +58,9 @@ Encore
     config.corejs = "3.23";
   });
 
+
+const config = Encore.getWebpackConfig();
+config.plugins.push(new VueLoaderPlugin());
 // enables Sass/SCSS support
 //.enableSassLoader()
 
