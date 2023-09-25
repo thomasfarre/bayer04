@@ -43,6 +43,9 @@ endif
 
 CONSOLE=$(EXEC) php bin/console
 
+
+
+
 # SSH
 ssh_dev:
 	ssh $(dev)
@@ -71,11 +74,11 @@ vendor/autoload.php: composer.lock
 composer.lock: composer.json
 	@echo composer.lock is not up to date.
 
-node_modules: yarn.lock
-	$(NODE) yarn install
-
 yarn.lock: package.json
 	@echo yarn.lock is not up to date.
+
+build_dev:
+		$(NODE) npm run watch
 
 clear_cache:
 	$(PHP) bin/console cache:clear --env=$(call get_env)
