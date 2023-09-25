@@ -1,0 +1,23 @@
+{# templates/base.html.twig #}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Symfony App{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ path('home') }}">Home</a></li>
+            <!-- Add other navigation items here -->
+        </ul>
+    </nav>
+    <main>
+        {% block body %}{% endblock %}
+    </main>
+    {% block javascripts %}{% endblock %}
+</body>
+</html>
