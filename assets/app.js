@@ -8,7 +8,7 @@
 // any CSS you import will output into a single css file (app.css in this case)
 
 import { createApp } from "vue";
-import App from "./vue/App.vue";
+import App from "./vue/Dashboard.vue";
 
 createApp(App).mount("#app");
 

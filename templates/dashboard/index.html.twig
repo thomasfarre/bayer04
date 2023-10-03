@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+    <h1>Welcome, {{ user.username }}!</h1>
+    <p>Your Profile Information:</p>
+    <ul>
+        <li>ID: {{ user.id }}</li>
+        <li>Username: {{ user.username }}</li>
+        {# ...other user fields... #}
+    </ul>
+    <div id="app">
+        <Dashboard></Dashboard>
+    </div>
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
