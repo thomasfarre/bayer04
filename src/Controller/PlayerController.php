@@ -13,62 +13,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/player')]
 class PlayerController extends AbstractController
 {
-    #[Route('/', name: 'player_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
-    {
-        $players = $entityManager->getRepository(Player::class)->findAll();
-
-        return $this->render('player/index.html.twig', [
-            'players' => $players,
-        ]);
-    }
-
-    #[Route('/new', name: 'app_player_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $player = new Player();
-        $form = $this->createForm(PlayerType::class, $player);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($player);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('player_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('player/new.html.twig', [
-            'player' => $player,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_player_show', methods: ['GET'])]
-    public function show(Player $player): Response
-    {
-        return $this->render('player/show.html.twig', [
-            'player' => $player,
-        ]);
-    }
-
-    #[Route('/{id}/edit', name: 'app_player_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Player $player, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(PlayerType::class, $player);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('player_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('player/edit.html.twig', [
-            'player' => $player,
-            'form' => $form,
-        ]);
-    }
-
     #[Route('/{id}', name: 'app_player_delete', methods: ['POST'])]
     public function delete(Request $request, Player $player, EntityManagerInterface $entityManager): Response
     {
@@ -77,6 +21,6 @@ class PlayerController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('player_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('dashboard', [], Response::HTTP_SEE_OTHER);
     }
 }
