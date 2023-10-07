@@ -18,12 +18,6 @@ class Role
     #[ORM\OneToMany(targetEntity: Player::class, mappedBy: 'role')]
     private Collection $players;
 
-    public function __construct(string $name)
-    {
-        $this->name = $name;
-        $this->players = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;

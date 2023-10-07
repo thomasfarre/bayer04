@@ -6,12 +6,6 @@
             </h1>
         </div>
         <div class="flex flex-col items-center justify-center h-screen">
-            <div class="pb-12">
-                <form @submit.prevent="addText">
-                    <input v-model="inputText" type="text" placeholder="Enter text...">
-                    <button type="submit">Add Player</button>
-                </form>
-            </div>
             <div ref="draggableArea" class="relative w-3/4 h-2/3 border-4 border-black bg-green-300" @mousemove="mouseMove"
                 @mouseup="mouseUp">
 
@@ -52,19 +46,12 @@ export default {
     data() {
         return {
             roles: window.roles, // Ensure roles have x, y properties for positioning
-            inputText: '',
             selectedRole: null,
             offsetX: 0,
             offsetY: 0
         };
     },
-    mounted() {
-        console.log(this.roles);
-    },
     methods: {
-        addText() {
-            // You may want to push new roles or players here.
-        },
         mouseDown(role, event) {
             this.selectedRole = role;
 
