@@ -22,8 +22,9 @@ class DashboardController extends AbstractController
     {
         $user = $this->getUser();
 
-        $players = $this->findAllPlayers();
         $roles = $this->findAllRoles();
+        $rolesArray = array_map(fn($role) => $role->serializeRole(), $roles);
+
 
         [$player, $form] = $this->handlePlayerCreation($request);
 
@@ -35,14 +36,8 @@ class DashboardController extends AbstractController
             'user' => $user,
             'player' => $player,
             'form' => $form,
-            'players' => $players,
-            'roles' => $roles
+            'roles' => $rolesArray
         ]);
-    }
-
-    private function findAllPlayers(): array
-    {
-        return $this->entityManager->getRepository(Player::class)->findAll();
     }
 
     private function findAllRoles(): array

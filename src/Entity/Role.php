@@ -40,6 +40,20 @@ class Role
         return $this;
     }
 
+    public function serializeRole(): array
+    {
+        $playersArray = [];
+        foreach ($this->getPlayers() as $player) {
+            $playersArray[] = $player->serializePlayer();
+        }
+
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'players' => $playersArray,
+        ];
+    }
+
     /**
      * @return Collection|Player[]
      */

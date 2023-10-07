@@ -39,8 +39,16 @@
 
      {% include 'player/new.html.twig' %}
 
+     {% block javascripts %}
+        <script type="text/javascript">
+            window.roles = {{ roles|json_encode|raw }};
+        </script>
+    {% endblock %}
+
     <div id="app">
         <Dashboard></Dashboard>
     </div>
     {{ encore_entry_script_tags('app') }}
 {% endblock %}
+
+

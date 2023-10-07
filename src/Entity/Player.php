@@ -48,4 +48,12 @@ class Player
         $this->role = $role;
         return $this;
     }
+
+    public function serializePlayer(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+        ];
+    }
 }
