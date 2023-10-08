@@ -44,15 +44,7 @@ endif
 CONSOLE=$(EXEC) php bin/console
 
 
-
-
-# SSH
-ssh_dev:
-	ssh $(dev)
-
-import_db_dev:
-	ssh $(dev) mysqldump $(dev_database) | mysql -u $(call read_param,"database_user") $(call read_param,"database_name")
-
+# Not up to date
 setup: create_env up vendor node_modules
 
 create_env:
@@ -74,9 +66,6 @@ vendor/autoload.php: composer.lock
 composer.lock: composer.json
 	@echo composer.lock is not up to date.
 
-yarn.lock: package.json
-	@echo yarn.lock is not up to date.
-
 build_dev:
 		$(NODE) npm run watch
 
@@ -85,14 +74,3 @@ clear_cache:
 
 db_update:
 	$(CONSOLE) doctrine:schema:update --force
-
-test:
-	$(PHP) composer run phpcs
-	$(PHP) composer run ecs
-	$(NODE) yarn run eslint
-	$(NODE) yarn run prettier
-
-format:
-	$(NODE) yarn run prettier:fix
-	$(NODE) yarn run eslint:fix
-	$(PHP) composer run ecs-fix
