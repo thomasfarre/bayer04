@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="pt-12 pl-12">
+        <div class="pl-12">
             <h1 class="text-4xl font-bold">
                 FM23 Compo
             </h1>
@@ -15,10 +15,10 @@
                 <div class="absolute top-1/2 right-0 transform -translate-y-1/2 w-20 h-48 border-t-4 border-l-4 border-b-4 border-white"></div>
 
                 <!-- Draggable Role -->
-                <div v-for="role in roles" :key="role.id" :style="{ left: role.x + 'px', top: role.y + 'px' }"
-                    class="draggableText bg-white p-4 rounded-md w-40" @mousedown="mouseDown(role, $event)">
+                <div v-for="role in roles" :key="role.id"
+                    class="absolute bg-white p-4 rounded-md w-40" :style="{ left: role.x + 'px', top: role.y + 'px' }">
 
-                    <div class="mb-2 border-b border-gray-800">
+                    <div class="mb-2 border-b border-gray-800 cursor-move" @mousedown="mouseDown(role, $event)">
                         <span class="text-xl text-bold">
                             {{ role.name }}
                         </span>
@@ -29,7 +29,9 @@
                                 {{ player.name }}
                             </span>
                             <button @click.prevent="confirmDelete(player)">
-                                <!-- SVG Icon for delete button -->
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
                             </button>
                         </div>
                     </div>
@@ -58,8 +60,8 @@ export default {
             let rect = event.target.getBoundingClientRect();
             let containerRect = this.$refs.draggableArea.getBoundingClientRect();
 
-            this.offsetX = event.clientX - rect.left + containerRect.left;
             this.offsetY = event.clientY - rect.top + containerRect.top;
+            this.offsetX = event.clientX - rect.left + containerRect.left;
         },
         mouseUp() {
             this.selectedRole = null;
@@ -70,8 +72,36 @@ export default {
                 this.selectedRole.y = event.clientY - this.offsetY;
             }
         },
-        confirmDelete(player) {
-            // Handle delete confirmation here.
+        // Handle delete confirmation here.
+        async confirmDelete(player) {
+            if (window.confirm(`Are you sure you want to delete ${player.name}?`)) {
+                try {
+                    let response = await fetch(`/player/${player.id}`, {
+                        method: 'POST',
+                    });
+                    if (response.ok) {
+                        alert('Player deleted!');
+
+                        // Find the role that contains the player
+                        const role = this.roles.find(r => r.players.some(p => p.id === player.id));
+
+                        // If the role is found, find and remove the player from the role's players array
+                        if (role) {
+                            const playerIndex = role.players.findIndex(p => p.id === player.id);
+                            if (playerIndex !== -1) {
+                                role.players.splice(playerIndex, 1);
+                            }
+                        }
+                    } else {
+                        let responseData = await response.json();
+                        alert(`Failed to delete player: ${responseData.message}`);
+                    }
+                } catch (error) {
+                    // Debug: Log the error
+                    console.log('Fetch error: ', error);
+                    alert('An error occurred. Please try again.');
+                }
+            }
         }
     }
 };
@@ -79,13 +109,7 @@ export default {
 
 
 <style scoped>
-  .draggableText {
-    position: absolute;
-    padding: 6px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    cursor: move;
-  }
+
 
   #draggableArea {
     user-select: none;

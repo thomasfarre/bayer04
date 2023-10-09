@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+
 
 #[Route('/user', name: 'user_profile')]
 class DashboardController extends AbstractController
@@ -19,13 +21,12 @@ class DashboardController extends AbstractController
         private EntityManagerInterface $entityManager
     ) {}
 
-    public function index(Request $request): Response
+    public function index(Request $request, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $user = $this->getUser();
 
         $roles = $this->findAllRoles();
         $rolesArray = array_map(fn($role) => $role->serializeRole(), $roles);
-
 
         [$player, $playerForm] = $this->handlePlayerCreation($request);
         [$role, $roleForm] = $this->handleRoleCreation($request);
@@ -44,9 +45,10 @@ class DashboardController extends AbstractController
             'role' => $role,
             'playerForm' => $playerForm,
             'roleForm' => $roleForm,
-            'roles' => $rolesArray
+            'roles' => $rolesArray,
         ]);
     }
+
 
     private function findAllRoles(): array
     {
